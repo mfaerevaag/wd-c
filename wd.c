@@ -32,7 +32,9 @@ int read_rc()
 
 int main()
 {
-    printf("hello, world!\n");
+    int rc;
 
-    return 0;
+    rc = read_rc();
+
+    return rc;
 }
