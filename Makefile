@@ -10,9 +10,9 @@ OBJ = $(patsubst $(SRC)/%.c, ./%.o, $(SRC))
 
 TARGET = wd
 
-.PHONY: all build run clean
+.PHONY: all build run clean release
 
-all: build
+all: build run
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -22,7 +22,10 @@ $(TARGET): $(OBJ)
 
 build: ./$(TARGET)
 
-run: build
+release: CFLAGS += -O3 -DNDEBUG
+release: clean build
+
+run:
 	./$(TARGET)
 
 clean:
