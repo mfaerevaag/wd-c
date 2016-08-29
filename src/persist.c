@@ -104,7 +104,7 @@ int wp_find_index(char *name)
 
     if (index < 0) {
         log_errf("no warp point named '%s'\n", ARGV[0]);
-        exit(1);
+        exit(EXIT_ERROR);
     }
 
     return index;

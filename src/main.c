@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     /* parse args */
     if (parse_args(argc, argv) != 0) {
         log_err("failed to parse args");
-        exit(1);
+        exit(EXIT_ERROR);
     }
 
     /* if here, no other command given; warp */
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         wpoint *point = wp_find(ARGV[0]);
 
         printf("%s", point->dir);
-        exit(0);
+        exit(EXIT_SUCCESS);
     } else if(ARGC > 1) {
         log_err("cannot warp to multiple points"); // TODO: logging
     } else {
@@ -71,12 +71,12 @@ int parse_args(int argc, char **argv)
         {
         case 0:
             print_version();
-            exit(2);
+            exit(EXIT_INFO);
             break;
 
         case 'h':
             print_help();
-            exit(2);
+            exit(EXIT_INFO);
             break;
 
         case 'c':
