@@ -125,7 +125,13 @@ void wp_add(char *name, char *dir)
 
 void wp_remove(char* name)
 {
-    printf("TODO: remove '%s'\n", name);
+    int index = wp_find_index(name);
+    wpoint **wps = wp_all();
+
+    debugf("removing '%s'\n", name);
+    for (int i = index; i < WPOINTS_COUNT - 1; i++) {
+        wps[i] = wps[i + 1];
+    }
 }
 
 void wp_store()

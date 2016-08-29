@@ -58,10 +58,11 @@ int parse_args(int argc, char **argv)
                 {"version", no_argument,       0,  0 },
                 {"help",    no_argument,       0, 'h'},
                 {"config",  required_argument, 0, 'c'},
+                {"remove",  required_argument, 0, 'r'},
                 {0, 0, 0, 0}
             };
 
-        c = getopt_long(argc, argv, "hc:",
+        c = getopt_long(argc, argv, "hc:r:",
                         long_options, &option_index);
 
         if (c == -1)
@@ -83,6 +84,11 @@ int parse_args(int argc, char **argv)
             // TODO: config file
             printf("TODO: config file `%s'\n", optarg);
             break;
+
+        case 'r':
+            wp_remove(optarg);
+            wp_print_all();
+            exit(EXIT_INFO);
 
         case '?':
             // TODO: logging
