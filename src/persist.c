@@ -86,8 +86,9 @@ int wp_parse()
     return 0;
 }
 
-wpoint *wp_find(char *name)
+int wp_find_index(char *name)
 {
+    int index = -1;
     wpoint **wps = wp_all();
 
     wpoint *wp;
@@ -96,11 +97,25 @@ wpoint *wp_find(char *name)
         wp = wps[i];
 
         if (strcmp(name, wp->name) == 0) {
-            return wp;
+            index = i;
+            break;
         }
     }
 
-    return NULL;
+    if (index < 0) {
+        log_errf("no warp point named '%s'\n", ARGV[0]);
+        exit(1);
+    }
+
+    return index;
+}
+
+wpoint *wp_find(char *name)
+{
+    int index = wp_find_index(name);
+    wpoint *wp = wp_all()[index];
+
+    return wp;
 }
 
 void wp_add(char *name, char *dir)

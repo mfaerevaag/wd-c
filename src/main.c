@@ -27,10 +27,6 @@ int main(int argc, char **argv)
         debugf("warping to '%s'\n", ARGV[0]);
 
         wpoint *point = wp_find(ARGV[0]);
-        if (point == NULL) {
-            log_errf("failed to find point for '%s'\n", ARGV[0]);
-            exit(1);
-        }
 
         printf("%s", point->dir);
         exit(0);

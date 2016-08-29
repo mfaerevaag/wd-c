@@ -21,7 +21,9 @@ void wp_free();
 void wp_print_all();
 wpoint **wp_all();
 
+int wp_find_index(char *name);
 wpoint *wp_find(char *name);
+
 void wp_add(char *name, char *dir);
 void wp_remove(char *name);
 
