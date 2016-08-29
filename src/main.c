@@ -4,31 +4,55 @@
 #include <getopt.h>
 #include <string.h>
 
-static int QUIET_FLAG;
-/* static char *RC_FILE = "~/.warprc"; */
-static int ARGC = 0;
-static char **ARGV = NULL;
+#include "logger.h"
+#include "persist.h"
+#include "config.h"
 
 int parse_args(int argc, char **argv);
+void print_help();
+void print_version();
 
 int main(int argc, char **argv)
 {
-    int rc;
-
     /* rc = read_rc(); */
 
-    rc = parse_args(argc, argv);
+    /* parse args */
+    if (parse_args(argc, argv) != 0) {
+        log_err("failed to parse args");
+        exit(1);
+    }
 
-    return rc;
+    /* if here, no other command given; warp */
+    if (ARGC == 1) {
+        debugf("warping to '%s'\n", ARGV[0]);
+
+        wpoint *point = wp_find(ARGV[0]);
+        if (point == NULL) {
+            log_errf("failed to find point for '%s'\n", ARGV[0]);
+            exit(1);
+        }
+
+        printf("%s", point->dir);
+        exit(0);
+    } else if(ARGC > 1) {
+        log_err("cannot warp to multiple points"); // TODO: logging
+    } else {
+        log_err("no warp point given"); // TODO: logging
+    }
+
+    /* clean */
+    wp_free();
+
+    return 0;
 }
 
 int parse_args(int argc, char **argv)
 {
     int c, ret;
-    ret = 0; /* all good so far */
+    ret = 0; /* all goond so far */
     opterr = 1; /* prevent error messages if 0 */
 
-    while(1)
+    while (1)
     {
         int option_index = 0;
 
@@ -50,13 +74,13 @@ int parse_args(int argc, char **argv)
         switch (c)
         {
         case 0:
-            printf("TODO: version\n");
-            exit(0); // TODO: ret code
+            print_version();
+            exit(2);
             break;
 
         case 'h':
-            printf("TODO: wow, such help\n");
-            exit(0); // TODO: ret code
+            print_help();
+            exit(2);
             break;
 
         case 'c':
@@ -69,7 +93,7 @@ int parse_args(int argc, char **argv)
             break;
 
         default:
-            abort();
+            abort(); // TODO: error
         }
     }
 
@@ -80,7 +104,7 @@ int parse_args(int argc, char **argv)
         char *opt;
         while (optind < argc) {
             opt = argv[optind++];
-            printf("opt: %s\n", opt); // TODO: debug
+            debugf("opt: %s\n", opt);
             size_t size = strlen(opt);
 
             ARGV[ARGC] = malloc(size);
@@ -91,4 +115,14 @@ int parse_args(int argc, char **argv)
     }
 
     return ret;
+}
+
+void print_help()
+{
+    printf("TODO: wow, such help\n");
+}
+
+void print_version()
+{
+    printf("TODO: version\n");
 }
