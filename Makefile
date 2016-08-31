@@ -27,11 +27,14 @@ $(ODIR)/%.o: $(SDIR)/%.c
 $(ODIR)/$(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
+build: CFLAGS += -g
 build: $(ODIR)
 build: $(ODIR)/$(TARGET)
 
 release: CFLAGS += -O3 -DNDEBUG
-release: clean build
+release: $(ODIR)
+release: clean
+release: $(ODIR)/$(TARGET)
 
 run:
 	$(ODIR)/$(TARGET)
