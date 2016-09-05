@@ -1,0 +1,22 @@
+SRC = $(wildcard *.c)
+OBJ = $(patsubst %.c, ../$(ODIR)/%.o, $(SRC))
+
+ifdef RELEASE
+	CFLAGS += -O3
+else ifdef PROFILE
+	CFLAGS += -pg
+else
+	CFLAGS += -g -DDEBUG
+endif
+
+.PHONY: all build
+
+all: build
+
+../$(ODIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+../$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
+
+build: ../$(TARGET)

@@ -1,48 +1,44 @@
-CC ?= gcc
+include config.mk
+export
 
-CFLAGS ?= -W -pedantic -Werror -Wall -std=gnu99 \
--fno-strict-aliasing -fno-common -Wno-unused-parameter \
--fstrict-aliasing -fstrict-overflow -fdiagnostics-color=always \
--Wno-return-local-addr
-
-PREFIX ?= /usr/local
-
-SDIR = src
-ODIR = bin
-SRC = $(wildcard $(SDIR)/*.c)
-OBJ = $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(SRC))
-
-TARGET ?= wd
-
-.PHONY: all build run clean release install uninstall
+.PHONY: all build run clean release \
+	install uninstall build-test test
 
 all: build
 
 $(ODIR):
 	mkdir -p $(ODIR)
 
-$(ODIR)/%.o: $(SDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ODIR)/$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+# src
 
-build: CFLAGS += -g
+build: ARGS += --verbose
 build: $(ODIR)
-build: $(ODIR)/$(TARGET)
+build: clean
+	cd $(SDIR) && $(MAKE) -f Makefile.src
 
-release: CFLAGS += -O3 -DNDEBUG
-release: $(ODIR)
-release: clean
-release: $(ODIR)/$(TARGET)
+release: RELEASE = 1
+release: clean build
+
+
+# test
+
+build-test: build
+	cd $(TDIR) && $(MAKE) -f Makefile.test
+
+test: build-test
+	./$(TTARGET)
+
+
+# misc
 
 run:
-	$(ODIR)/$(TARGET)
+	$(TARGET)
 
-install: $(ODIR)/$(TARGET)
-	install -m 0755 $(ODIR)/$(TARGET) $(PREFIX)/bin/_$(TARGET)
+install: $(TARGET)
+	install -m 0755 $(TARGET) $(PREFIX)/bin/_$(patsubst $(ODIR)/%,%,$(TARGET))
 
-uninstall: $(ODIR)/$(TARGET)
+uninstall: $(TARGET)
 	rm -rf $(PREFIX)/bin/$(TARGET)
 
 clean:
