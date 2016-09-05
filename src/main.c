@@ -123,10 +123,37 @@ int parse_args(int argc, char **argv)
 
 void print_help()
 {
-    printf("TODO: wow, such help\n");
+    printf(
+        "Usage: wd [command] <point>\n"
+        "\n"
+        "Example:\n"
+        "\t$ wd --add foo \t\t# points to current dir\n"
+        "\t$ cd ~/far/far/away\n"
+        "\t$ wd foo \t\t# and you're back!\n"
+        "\n"
+        "Commands:\n"
+        "--add <point>\tAdds the current working directory to your warp points\n"
+        /* "--add! <point>\tOverwrites existing warp point\n" */
+        "--rm <point>\tRemoves the given warp point\n"
+        /* "--show\t\tPrint warp points to current directory\n" */
+        /* "--show <point>\tPrint path to given warp point\n" */
+        /* "--list\t\tPrint all stored warp points\n" */
+        /* "--ls  <point>\tShow files from given warp point\n" */
+        /* "--path <point>\tShow the path to given warp point\n" */
+        /* "--clean!\tRemove points warping to nonexistent directories\n" */
+        "\n"
+        "Other:\n"
+        "-h, --help\t\tShow this extremely helpful text\n"
+        "-v, --version\tPrint version\n"
+        "-c, --config <file>\tSpecify config file (default ~/.warprc)\n"
+        "-q, --quiet\tSuppress all output\n"
+        "\n"
+        "Licenced under MIT\n" // TODO
+        "Report bugs to github.com/mfaerevaag/wdc\n" // TODO
+        );
 }
 
 void print_version()
 {
-    printf("TODO: version\n");
+    printf("wd (in c) version 0.1\n");
 }
