@@ -12,34 +12,36 @@ int parse_args(int argc, char **argv);
 void print_help();
 void print_version();
 
+int DO_WARP = 1;
+
 int main(int argc, char **argv)
 {
-    /* rc = read_rc(); */
-
     /* parse args */
     if (parse_args(argc, argv) != 0) {
         log_err("failed to parse args");
         exit(EXIT_ERROR);
     }
 
-    /* if here, no other command given; warp */
-    if (ARGC == 1) {
-        debugf("warping to '%s'\n", ARGV[0]);
+    /* do warp? */
+    if (DO_WARP == 1) {
+        debug("do warp");
 
-        wpoint *point = wp_find(ARGV[0]);
+        if (ARGC == 1) {
+            debugf("warping to '%s'\n", ARGV[0]);
 
-        printf("%s", point->dir);
-        exit(EXIT_SUCCESS);
-    } else if(ARGC > 1) {
-        log_err("cannot warp to multiple points"); // TODO: logging
-    } else {
-        log_err("no warp point given"); // TODO: logging
+            wpoint *point = wp_find(ARGV[0]);
+
+            printf("%s", point->dir);
+        } else if(ARGC > 1) {
+            log_err("cannot warp to multiple points");
+        } else {
+            log_err("no warp point given");
+        }
     }
 
     /* clean */
     wp_free();
-
-    return 0;
+    exit(DO_WARP ? EXIT_SUCCESS : EXIT_INFO);
 }
 
 int parse_args(int argc, char **argv)

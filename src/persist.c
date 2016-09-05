@@ -1,31 +1,25 @@
 #include "persist.h"
 
-static int WPOINTS_PARSED = 0;
 static int WPOINTS_COUNT = 0;
-static wpoint **WPOINTS = NULL;
+static wpoint **WPOINTS;
+static int WPOINTS_PARSED = 0;
+static int WPOINTS_CHANGED = 0;
+static FILE *RC_FP;
 
 static char *DELIM = ":";
-
-
-int wp_parse();
 
 wpoint **wp_all()
 {
     if (WPOINTS_PARSED == 0) {
-        debug("init points...");
-        int rc = wp_parse();
-        if (rc != 0) {
-            printf("failed to parse warp points\n"); // TODO: logging
-            abort(); // TODO: error
-        }
+        debug("init points");
+        wp_parse();
     }
 
     return WPOINTS;
 }
 
-int wp_parse()
+void wp_parse()
 {
-    FILE *fp;
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
@@ -34,14 +28,17 @@ int wp_parse()
     debug("parsing points...");
 
     /* open file */
-    fp = fopen(RC_FILE, "r");
-    if (fp == NULL) {
-        printf("could not open file '%s'\n", RC_FILE); // TODO: logging
-        return(1); // TODO: error
+    if (RC_FP == NULL) {
+        RC_FP = fopen(get_rc_file(), "r");
+
+        if (RC_FP == NULL) {
+            printf("could not open file '%s'\n", get_rc_file()); // TODO: logging
+            exit(EXIT_ERROR); // TODO: error
+        }
     }
 
     /* count lines */
-    while ((read = getline(&line, &len, fp)) != -1) {
+    while ((read = getline(&line, &len, RC_FP)) != -1) {
         count++;
     }
     WPOINTS_COUNT = count;
@@ -50,31 +47,34 @@ int wp_parse()
     WPOINTS = malloc(count * sizeof(wpoint *));
 
     /* read points */
-    rewind(fp);
+    rewind(RC_FP);
     int i = 0;
-    while ((read = getline(&line, &len, fp)) != -1) {
-        debugf("found %s", line);
-
+    while ((read = getline(&line, &len, RC_FP)) != -1) {
         char *token;
+        int len;
         wpoint *p = malloc(sizeof(wpoint));
+
+        debugf("found [%zu] %s", read, line);
 
         /* name token */
         token = strtok(line, DELIM); // token will point to name
-        p->name = (char *) malloc(strlen(token));
-        memcpy(p->name, token, read);
+        len = strlen(token);
+        /* debugf("name token: [%zu] %s\n", strlen(token), token); */
+        p->name = (char *) malloc(len);
+        memcpy(p->name, token, len);
 
         /* dir token */
         token = strtok(NULL, DELIM); // token will point to dir
-        p->dir = (char *) malloc(strlen(token));
-        memcpy(p->dir, token, read);
-        p->dir[strlen(p->dir) - 1] = 0; // remove newline char
+        len = strlen(token);
+        p->dir = (char *) malloc(len);
+        memcpy(p->dir, token, len);
+        p->dir[len - 1] = 0; // remove newline char
 
         WPOINTS[i] = p;
         i++;
     }
 
     /* clean */
-    fclose(fp);
     if (line) {
         free(line);
     }
@@ -82,8 +82,70 @@ int wp_parse()
     /* finish */
     WPOINTS_PARSED = 1;
     debugf("finished parsing %d points\n", count);
+}
 
-    return 0;
+void wp_free()
+{
+    if (WPOINTS_PARSED == 1) {
+        debug("freeing");
+
+        if (WPOINTS_CHANGED == 1) {
+            wp_store();
+        }
+
+        /* free pointers */
+        wpoint **wps = wp_all();
+        wpoint *wp;
+        for (int i = 0; i < WPOINTS_COUNT; i++) {
+            wp = wps[i];
+
+            free(wp->name);
+            free(wp->dir);
+            free(wp);
+        }
+        free(WPOINTS);
+        WPOINTS_COUNT = 0;
+
+        /* close file handle */
+        if (fclose(RC_FP)) {
+            log_err("error closing config file");
+            exit(EXIT_ERROR);
+        }
+        RC_FP = NULL;
+
+        WPOINTS_CHANGED = 0;
+        WPOINTS_PARSED = 0;
+    }
+}
+
+void wp_store()
+{
+    wpoint **wps = wp_all();
+    wpoint *wp;
+    int rc;
+
+    debug("storing");
+    wp_print_all();
+
+    /* truncate and get write permission */
+    RC_FP = freopen(NULL, "w+", RC_FP);
+
+    /* check */
+    if (RC_FP == NULL) {
+        log_errf("error opening config '%s'\n", get_rc_file());
+        exit(EXIT_ERROR);
+    }
+
+    /* write to file */
+    for (int i = 0; i < WPOINTS_COUNT; i++)
+    {
+        wp = wps[i];
+        debugf("writing %s:%s\n", wp->name, wp->dir);
+        rc = fprintf(RC_FP, "%s:%s\n", wp->name, wp->dir);
+        if (rc < 0) {
+            log_errf("failed to write to config '%s'\n", get_rc_file());
+        }
+    }
 }
 
 int wp_find_index(char *name)
@@ -97,13 +159,14 @@ int wp_find_index(char *name)
         wp = wps[i];
 
         if (strcmp(name, wp->name) == 0) {
+            debugf("match at index %i\n", i);
             index = i;
             break;
         }
     }
 
     if (index < 0) {
-        log_errf("no warp point named '%s'\n", ARGV[0]);
+        log_errf("no warp point named '%s'\n", name);
         exit(EXIT_ERROR);
     }
 

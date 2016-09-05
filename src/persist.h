@@ -15,6 +15,7 @@ struct wpoint_t
 };
 typedef struct wpoint_t wpoint;
 
+void wp_parse();
 void wp_store();
 void wp_free();
 
