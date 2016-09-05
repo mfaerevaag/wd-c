@@ -83,8 +83,8 @@ int parse_args(int argc, char **argv)
             break;
 
         case 'c':
-            // TODO: config file
-            printf("TODO: config file `%s'\n", optarg);
+            debugf("setting rc file to '%s'\n", optarg);
+            set_rc_file(optarg);
             break;
 
         case 'r':
