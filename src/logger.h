@@ -8,16 +8,16 @@
 #include <errno.h>
 #include <string.h>
 
-#ifdef NDEBUG
-#define debugf(M, ...)
-#define debug(M)
-#define todof(M, ...)
-#define todo(M)
-#else
+#ifdef DEBUG
 #define debugf(M, ...) fprintf(stderr, "debug: %s:%s:%d: " M, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 #define debug(M) fprintf(stderr, "debug: %s:%s:%d: " M "\n", __FILE__, __func__, __LINE__)
 #define todof(M, ...) fprintf(stderr, "todo: %s:%d: " M, __FILE__, __LINE__, ##__VA_ARGS__)
 #define todo(M) fprintf(stderr, "todo: %s:%d: " M "\n", __FILE__, __LINE__)
+#else
+#define debugf(M, ...)
+#define debug(M)
+#define todof(M, ...)
+#define todo(M)
 #endif
 
 #define clean_errno() (errno == 0 ? "none" : strerror(errno))
