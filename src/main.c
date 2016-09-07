@@ -67,13 +67,14 @@ int parse_args(int argc, char **argv)
                 {"quiet",   no_argument,       &QUIET_FLAG, 1},
                 {"version", no_argument,       0,  0 },
                 {"help",    no_argument,       0, 'h'},
+                {"list",    no_argument,       0, 'l'},
                 {"config",  required_argument, 0, 'c'},
                 {"remove",  required_argument, 0, 'r'},
                 {"add",     required_argument, 0, 'a'},
                 {0, 0, 0, 0}
             };
 
-        c = getopt_long(argc, argv, "hc:r:a:",
+        c = getopt_long(argc, argv, "hlc:r:a:",
                         long_options, &option_index);
 
         if (c == -1)
@@ -108,6 +109,13 @@ int parse_args(int argc, char **argv)
             debug("do remove");
 
             wp_remove(optarg);
+            DO_WARP = 0;
+            break;
+
+        case 'l':
+            debug("do list");
+
+            wp_print_all();
             DO_WARP = 0;
             break;
 
@@ -152,13 +160,13 @@ void print_help()
         "\n"
         "Commands:\n"
         "--add <point>\tAdds the current working directory to your warp points\n"
-        /* "--add! <point>\tOverwrites existing warp point\n" */
+        "--add! <point>\tOverwrites existing warp point\n"
         "--rm <point>\tRemoves the given warp point\n"
         /* "--show\t\tPrint warp points to current directory\n" */
         /* "--show <point>\tPrint path to given warp point\n" */
-        /* "--list\t\tPrint all stored warp points\n" */
+        "--list\t\tPrint all stored warp points\n"
         /* "--ls  <point>\tShow files from given warp point\n" */
-        /* "--path <point>\tShow the path to given warp point\n" */
+        "--path <point>\tShow the path to given warp point\n"
         /* "--clean!\tRemove points warping to nonexistent directories\n" */
         "\n"
         "Other:\n"

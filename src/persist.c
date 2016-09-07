@@ -256,6 +256,7 @@ void wp_print_all()
         return;
     }
 
+    printf("total %i\n", WPOINTS_COUNT);
     for (int i = 0; i < WPOINTS_COUNT; i++)
     {
         printf("\t%10s -> %10s\n", wps[i]->name, wps[i]->dir);
