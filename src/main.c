@@ -35,15 +35,15 @@ int main(int argc, char **argv)
             wpoint *point = wp_find(name);
 
             if (point == NULL) {
-                log_errf("no warp point named '%s'\n", name);
+                log_warnf("no warp point named '%s'\n", name);
                 exit(EXIT_ERROR);
             }
 
             printf("%s", point->dir);
         } else if(ARGC > 1) {
-            log_err("cannot warp to multiple points");
+            log_warn("cannot warp to multiple points");
         } else {
-            log_err("no warp point given");
+            log_warn("no warp point given");
         }
     }
 
@@ -114,11 +114,11 @@ int parse_args(int argc, char **argv)
             break;
 
         case 'p':
-            debug("do show path");
+            debug("do path");
 
             wpoint *wp = wp_find(optarg);
             if (wp == NULL) {
-                log_errf("no warp point named '%s'\n", optarg);
+                log_warnf("no warp point named '%s'\n", optarg);
                 exit(EXIT_ERROR);
             }
 

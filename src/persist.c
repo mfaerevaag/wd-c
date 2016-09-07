@@ -189,8 +189,8 @@ void wp_add(char *name, char *dir)
 
     /* check if exists */
     if (wp_find(name) != NULL) {
-        log_err("point already exists");
-        exit(EXIT_ERROR);
+        log_warn("point already exists");
+        return;
     }
 
     debugf("adding '%s' -> '%s'\n", name, dir);
@@ -225,8 +225,8 @@ void wp_remove(char* name)
 {
     int index = wp_find_index(name);
     if (index < 0) {
-        log_errf("no warp point named '%s'\n", name);
-        exit(EXIT_ERROR);
+        log_warnf("no warp point named '%s'\n", name);
+        return;
     }
 
     wpoint **wps = wp_all();
