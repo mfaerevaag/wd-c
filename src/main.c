@@ -68,6 +68,7 @@ int parse_args(int argc, char **argv)
                 {"version", no_argument,       0,  0 },
                 {"help",    no_argument,       0, 'h'},
                 {"list",    no_argument,       0, 'l'},
+                {"show",    no_argument,       0, 's'},
                 {"config",  required_argument, 0, 'c'},
                 {"remove",  required_argument, 0, 'r'},
                 {"add",     required_argument, 0, 'a'},
@@ -75,7 +76,7 @@ int parse_args(int argc, char **argv)
                 {0, 0, 0, 0}
             };
 
-        c = getopt_long(argc, argv, "hlc:r:a:p:",
+        c = getopt_long(argc, argv, "hlsc:r:a:p:",
                         long_options, &option_index);
 
         if (c == -1)
@@ -101,7 +102,7 @@ int parse_args(int argc, char **argv)
         case 'a':
             debug("do add");
 
-            /* TODO: clean args */
+            /* TODO: clean args, env */
             wp_add(optarg, getenv("PWD"));
             DO_WARP = 0;
             break;
@@ -123,6 +124,20 @@ int parse_args(int argc, char **argv)
             }
 
             printf("%s\n", wp->dir);
+
+            DO_WARP = 0;
+            break;
+
+        case 's':
+            debug("do show");
+
+            char *dir = getenv("PWD"); // TODO: env
+            wpoint **wps = wp_all();
+            for (int i = 0; i < wp_count(); i++) {
+                if (strcmp(wps[i]->dir, dir) == 0) {
+                    printf("\t%10s -> %10s\n", wps[i]->name, wps[i]->dir);
+                }
+            }
 
             DO_WARP = 0;
             break;
@@ -175,13 +190,12 @@ void print_help()
         "\n"
         "Commands:\n"
         "--add <point>\tAdds the current working directory to your warp points\n"
-        "--add! <point>\tOverwrites existing warp point\n"
+        /* "--add! <point>\tOverwrites existing warp point\n" */
         "--rm <point>\tRemoves the given warp point\n"
-        /* "--show\t\tPrint warp points to current directory\n" */
-        /* "--show <point>\tPrint path to given warp point\n" */
         "--list\t\tPrint all stored warp points\n"
-        /* "--ls  <point>\tShow files from given warp point\n" */
+        "--show\t\tPrint warp points to current directory\n"
         "--path <point>\tShow the path to given warp point\n"
+        /* "--ls  <point>\tShow files from given warp point\n" */
         /* "--clean!\tRemove points warping to nonexistent directories\n" */
         "\n"
         "Other:\n"

@@ -18,6 +18,11 @@ wpoint **wp_all()
     return WPOINTS;
 }
 
+int wp_count()
+{
+    return WPOINTS_COUNT;
+}
+
 void wp_parse()
 {
     char *line = NULL;

@@ -19,7 +19,7 @@ void wp_parse();
 void wp_store();
 void wp_free();
 
-void wp_print_all();
+int wp_count();
 wpoint **wp_all();
 
 int wp_find_index(char *name);
@@ -27,5 +27,7 @@ wpoint *wp_find(char *name);
 
 void wp_add(char *name, char *dir);
 void wp_remove(char *name);
+
+void wp_print_all();
 
 #endif
