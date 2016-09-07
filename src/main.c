@@ -27,9 +27,17 @@ int main(int argc, char **argv)
         debug("do warp");
 
         if (ARGC == 1) {
-            debugf("warping to '%s'\n", ARGV[0]);
+            /* TODO: clean args, buffer overflow */
+            char *name = ARGV[0];
 
-            wpoint *point = wp_find(ARGV[0]);
+            debugf("warping to '%s'\n", name);
+
+            wpoint *point = wp_find(name);
+
+            if (point == NULL) {
+                log_errf("no warp point named '%s'\n", name);
+                exit(EXIT_ERROR);
+            }
 
             printf("%s", point->dir);
         } else if(ARGC > 1) {
@@ -61,10 +69,11 @@ int parse_args(int argc, char **argv)
                 {"help",    no_argument,       0, 'h'},
                 {"config",  required_argument, 0, 'c'},
                 {"remove",  required_argument, 0, 'r'},
+                {"add",     required_argument, 0, 'a'},
                 {0, 0, 0, 0}
             };
 
-        c = getopt_long(argc, argv, "hc:r:",
+        c = getopt_long(argc, argv, "hc:r:a:",
                         long_options, &option_index);
 
         if (c == -1)
@@ -87,17 +96,27 @@ int parse_args(int argc, char **argv)
             set_rc_file(optarg);
             break;
 
+        case 'a':
+            debug("do add");
+
+            /* TODO: clean args */
+            wp_add(optarg, getenv("PWD"));
+            DO_WARP = 0;
+            break;
+
         case 'r':
+            debug("do remove");
+
             wp_remove(optarg);
-            wp_print_all();
-            exit(EXIT_INFO);
+            DO_WARP = 0;
+            break;
 
         case '?':
             // TODO: logging
             break;
 
         default:
-            abort(); // TODO: error
+            exit(EXIT_ERROR);
         }
     }
 

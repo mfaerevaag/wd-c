@@ -2,12 +2,14 @@ SRC = $(subst ../$(SDIR)/main.c,,$(wildcard ../$(SDIR)/*.c))
 TSRC = $(wildcard *.c)
 TOBJ = $(patsubst %.c, ../$(ODIR)/%.o, $(TSRC))
 
+_TCONFIG = $(patsubst $(LDIR)/%,$(ODIR)/%, $(TCONFIG))
+
 .PHONY = build
 
 all: build
 
 ../$(ODIR)/%.o: %.c
-	$(CC) -fgnu89-inline -fdiagnostics-color=always -g -DTEST_CONFIG=\"$(TCONFIG)\"  -I../$(SDIR) -c $< -o $@
+	$(CC) -fgnu89-inline -fdiagnostics-color=always -g -DTEST_CONFIG=\"$(_TCONFIG)\"  -I../$(SDIR) -c $< -o $@
 
 ../$(TTARGET): $(TOBJ)
 	$(CC) -g -I../$(SDIR) -DDEBUG $(TLIBS) -o $@ $(SRC) $^

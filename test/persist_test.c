@@ -44,8 +44,34 @@ static void test_find(void **state)
 
     wpoint *wp = wp_find("bar");
 
+    assert_non_null(wp);
     assert_string_equal("bar", wp->name);
     assert_string_equal("/home/doge/foo/bar", wp->dir);
+}
+
+static void test_add(void **state)
+{
+    (void) state;
+
+    assert_null(wp_find("asdf"));
+
+    wp_add("asdf", "/a/s/d/f");
+
+    wpoint *wp = wp_find("asdf");
+    assert_non_null(wp);
+    assert_string_equal("asdf", wp->name);
+    assert_string_equal("/a/s/d/f", wp->dir);
+}
+
+static void test_remove(void **state)
+{
+    (void) state;
+
+    assert_non_null(wp_find("bar"));
+
+    wp_remove("bar");
+
+    assert_null(wp_find("bar"));
 }
 
 /* run */
@@ -55,6 +81,8 @@ int run_persist_tests()
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_find),
         cmocka_unit_test(test_find_id),
+        cmocka_unit_test(test_add),
+        cmocka_unit_test(test_remove),
     };
 
     return cmocka_run_group_tests_name(

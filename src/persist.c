@@ -126,8 +126,7 @@ void wp_store()
     wpoint *wp;
     int rc;
 
-    debug("storing");
-    wp_print_all();
+    debug("storing points...");
 
     /* truncate and get write permission */
     RC_FP = freopen(NULL, "w+", RC_FP);
@@ -142,12 +141,15 @@ void wp_store()
     for (int i = 0; i < WPOINTS_COUNT; i++)
     {
         wp = wps[i];
-        debugf("writing %s:%s\n", wp->name, wp->dir);
+        /* debugf("writing %s:%s\n", wp->name, wp->dir); */
+
         rc = fprintf(RC_FP, "%s:%s\n", wp->name, wp->dir);
         if (rc < 0) {
             log_errf("failed to write to config '%s'\n", get_rc_file());
         }
     }
+
+    debugf("finished storing %d points\n", WPOINTS_COUNT);
 }
 
 int wp_find_index(char *name)
@@ -161,15 +163,10 @@ int wp_find_index(char *name)
         wp = wps[i];
 
         if (strcmp(name, wp->name) == 0) {
-            debugf("match at index %i\n", i);
+            /* debugf("match at index %i\n", i); */
             index = i;
             break;
         }
-    }
-
-    if (index < 0) {
-        log_errf("no warp point named '%s'\n", name);
-        exit(EXIT_ERROR);
     }
 
     return index;
@@ -178,6 +175,9 @@ int wp_find_index(char *name)
 wpoint *wp_find(char *name)
 {
     int index = wp_find_index(name);
+
+    if (index < 0) return NULL;
+
     wpoint *wp = wp_all()[index];
 
     return wp;
@@ -185,34 +185,65 @@ wpoint *wp_find(char *name)
 
 void wp_add(char *name, char *dir)
 {
-    printf("TODO: add '%s' -> '%s'\n", name, dir);
+    int len;
+
+    /* check if exists */
+    if (wp_find(name) != NULL) {
+        log_err("point already exists");
+        exit(EXIT_ERROR);
+    }
+
+    debugf("adding '%s' -> '%s'\n", name, dir);
+
+    WPOINTS_COUNT++;
+
+    /* allocate mem */
+    WPOINTS = realloc(WPOINTS, sizeof(wpoint *) * WPOINTS_COUNT);
+    if (WPOINTS == NULL) {
+        log_err("failed to reallocate memory for points");
+        exit(EXIT_ERROR);
+    }
+
+    /* new point */
+    WPOINTS[WPOINTS_COUNT - 1] = malloc(sizeof(wpoint));
+    wpoint *new = WPOINTS[WPOINTS_COUNT - 1];
+
+    /* set name */
+    len = strlen(name);
+    new->name = (char *) calloc(sizeof(char), len);
+    memcpy(new->name, name, len);
+
+    /* set dir */
+    len = strlen(dir);
+    new->dir = (char *) calloc(sizeof(char), len);
+    memcpy(new->dir, dir, len);
+
+    WPOINTS_CHANGED = 1;
 }
 
 void wp_remove(char* name)
 {
     int index = wp_find_index(name);
+    if (index < 0) {
+        log_errf("no warp point named '%s'\n", name);
+        exit(EXIT_ERROR);
+    }
+
     wpoint **wps = wp_all();
 
     debugf("removing '%s'\n", name);
-    for (int i = index; i < WPOINTS_COUNT - 1; i++) {
-        wps[i] = wps[i + 1];
+
+    /* check if last */
+    if (index == WPOINTS_COUNT - 1) {
+        wps[index] = NULL;
+    } else {
+        for (int i = index; i < WPOINTS_COUNT - 1; i++) {
+            wps[i] = wps[i + 1];
+        }
     }
-}
 
-void wp_store()
-{
-    printf("TODO: store\n");
-}
-
-void wp_free()
-{
-    if (WPOINTS_PARSED == 1) {
-        debug("freeing wpoints");
-
-        free(WPOINTS);
-        WPOINTS_COUNT = 0;
-        WPOINTS_PARSED = 0;
-    }
+    WPOINTS_COUNT--;
+    WPOINTS_CHANGED = 1;
 }
 
 void wp_print_all()
