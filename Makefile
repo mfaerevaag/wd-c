@@ -1,24 +1,23 @@
 include config.mk
 export
 
-.PHONY: all build run clean release \
-	install uninstall build-test test test-config
+.PHONY: all build run clean debug install uninstall \
+	build-test test test-config
 
-all: build
-
-$(ODIR):
-	mkdir -p $(ODIR)
+all: clean build
 
 
 # src
 
-build: ARGS += --verbose
+$(ODIR):
+	mkdir -p $(ODIR)
+
 build: $(ODIR)
-build: clean
+build:
 	cd $(SDIR) && $(MAKE) -f Makefile.src
 
-release: RELEASE = 1
-release: clean build
+debug: DEBUG = 1
+debug: build
 
 
 # test
@@ -34,16 +33,21 @@ test:
 	./$(TTARGET)
 
 
+# install
+
+install: $(TARGET)
+	install -Dm755 $(TARGET) $(prefix)/bin/_$(NAME)
+	install -Dm644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
+
+uninstall: $(TARGET)
+	rm -rf $(prefix)/bin/_$(NAME)
+	rm -rf $(prefix)/share/$(NAME)
+
+
 # misc
 
 run:
 	$(TARGET)
-
-install: $(TARGET)
-	install -m 0755 $(TARGET) $(PREFIX)/bin/_$(patsubst $(ODIR)/%,%,$(TARGET))
-
-uninstall: $(TARGET)
-	rm -rf $(PREFIX)/bin/$(TARGET)
 
 clean:
 	rm -rf $(ODIR)/*

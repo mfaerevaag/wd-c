@@ -5,8 +5,9 @@ CFLAGS ?= -W -pedantic -Werror -Wall -std=gnu99 \
 -fstrict-aliasing -fstrict-overflow -fdiagnostics-color=always \
 -Wno-return-local-addr
 
-PREFIX ?= /usr/local
-DEBUG  ?= 0
+prefix ?= /usr
+
+NAME = wd
 
 SDIR = src
 ODIR = bin
@@ -15,7 +16,9 @@ LDIR = lib
 SRC = $(wildcard $(SDIR)/*.c)
 OBJ = $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(SRC))
 
-TARGET  ?= $(ODIR)/wd
-TTARGET ?= $(ODIR)/wd-test
+TARGET   ?= $(ODIR)/$(NAME)
+WRAPPERS ?= $(wildcard $(LDIR)/$(NAME).*)
+
+TTARGET ?= $(ODIR)/$(NAME)-test
 TLIBS   ?= -lcmocka
 TCONFIG ?= $(LDIR)/test_warprc
