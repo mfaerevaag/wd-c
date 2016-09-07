@@ -2,7 +2,7 @@ include config.mk
 export
 
 .PHONY: all build run clean release \
-	install uninstall build-test test
+	install uninstall build-test test test-config
 
 all: build
 
@@ -26,7 +26,11 @@ release: clean build
 build-test: build
 	cd $(TDIR) && $(MAKE) -f Makefile.test
 
-test: build-test
+test-config:
+	cp $(TCONFIG) $(ODIR)/
+
+test: build-test test-config
+test:
 	./$(TTARGET)
 
 
