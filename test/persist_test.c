@@ -27,11 +27,20 @@ static int teardown(void **state)
 
 /* tests */
 
-static void test_find(void **state)
+static void test_find_id(void **state)
 {
     (void) state;
 
-    wp_print_all();
+    int index = wp_find_index("bar");
+
+    assert_int_equal(1, index);
+    assert_string_equal("bar", wp_all()[index]->name);
+    assert_string_equal("/home/doge/foo/bar", wp_all()[index]->dir);
+}
+
+static void test_find(void **state)
+{
+    (void) state;
 
     wpoint *wp = wp_find("bar");
 
@@ -45,6 +54,7 @@ int run_persist_tests()
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_find),
+        cmocka_unit_test(test_find_id),
     };
 
     return cmocka_run_group_tests_name(

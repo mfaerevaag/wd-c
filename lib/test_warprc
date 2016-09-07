@@ -1,19 +1,6 @@
-usb:/mnt/usb
-nas:/mnt/nas
-docs:/home/markus/docs
-code:/home/markus/dev/code
-bbp:/home/markus/dev/code/bbp
-hive:/home/markus/SpiderOak Hive
-rb:/home/markus/dev/code/ruby
-rails:/home/markus/dev/code/ruby/rails
-py:/home/markus/dev/code/python
-st:/home/markus/dev/code/smalltalk
-js:/home/markus/dev/code/js
-c:/home/markus/dev/code/c
-a:/home/markus/dev/code/a
-rs:/home/markus/dev/code/rust
-fenix:/home/markus/dev/code/fenix
-s:/home/markus/docs/school
-tmp:/home/markus/tmp
-org:/home/markus/org
-sh:/home/markus/dev/code/shell
+foo:/home/doge/foo
+bar:/home/doge/foo/bar
+space:/f o o/space
+?:/home/?
+short:/
+long:/some/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/long/path/name/damn/son
