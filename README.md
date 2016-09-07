@@ -1,21 +1,33 @@
 wd
 ==
 
-`wd` (*warp directory*) lets you jump to custom directories in zsh, without using `cd`. Why? Because `cd` seems ineffecient when the folder is frequently visited or has a long path.
+`wd` (*warp directory*) lets you jump to custom directories in your terminal, without using `cd`. Why? Because `cd` seems inefficient when the folder is frequently visited or has a long path.
 
-*NOTE*: This is a port written in `c`, which can be used in all emulators using a wrappers. If you're using zsh, check out the [original](https://github.com/mfaerevaag/wd).
+*NOTE*: This is a port written in `c`, which can be used in all shells using a wrappers. If you're using oh-my-zsh, check out the [original](https://github.com/mfaerevaag/wd).
 
-### Install
+
+# Install
+
+To install properly you need to compile and install binary _and_ copy and source the wanted wrapper.
+
+## Binary (`_wd`)
+
+### Manual
 
 `_wd`:
 
     $ make release
     # make install
 
-Wrapper:
+### Arch ([AUR](https://aur.archlinux.org/))
 
     TODO
 
-### Usage
+## Wrapper (`wd`)
 
-See [original `zsh` version](https://github.com/mfaerevaag/wd).
+    TODO
+
+
+# Usage
+
+See original [README](https://github.com/mfaerevaag/wd).
