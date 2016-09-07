@@ -54,19 +54,21 @@ void wp_parse()
         int len;
         wpoint *p = malloc(sizeof(wpoint));
 
-        debugf("found [%zu] %s", read, line);
+        /* debugf("found [%zu] %s", read, line); */
 
         /* name token */
         token = strtok(line, DELIM); // token will point to name
         len = strlen(token);
-        /* debugf("name token: [%zu] %s\n", strlen(token), token); */
-        p->name = (char *) malloc(len);
+
+        /* debugf("name token: [%i] %s\n", len, token); */
+        p->name = (char *) calloc(sizeof(char), len);
         memcpy(p->name, token, len);
 
         /* dir token */
         token = strtok(NULL, DELIM); // token will point to dir
         len = strlen(token);
-        p->dir = (char *) malloc(len);
+
+        p->dir = (char *) calloc(sizeof(char), len);
         memcpy(p->dir, token, len);
         p->dir[len - 1] = 0; // remove newline char
 
