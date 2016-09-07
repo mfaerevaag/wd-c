@@ -71,10 +71,11 @@ int parse_args(int argc, char **argv)
                 {"config",  required_argument, 0, 'c'},
                 {"remove",  required_argument, 0, 'r'},
                 {"add",     required_argument, 0, 'a'},
+                {"path",    required_argument, 0, 'p'},
                 {0, 0, 0, 0}
             };
 
-        c = getopt_long(argc, argv, "hlc:r:a:",
+        c = getopt_long(argc, argv, "hlc:r:a:p:",
                         long_options, &option_index);
 
         if (c == -1)
@@ -109,6 +110,20 @@ int parse_args(int argc, char **argv)
             debug("do remove");
 
             wp_remove(optarg);
+            DO_WARP = 0;
+            break;
+
+        case 'p':
+            debug("do show path");
+
+            wpoint *wp = wp_find(optarg);
+            if (wp == NULL) {
+                log_errf("no warp point named '%s'\n", optarg);
+                exit(EXIT_ERROR);
+            }
+
+            printf("%s\n", wp->dir);
+
             DO_WARP = 0;
             break;
 
