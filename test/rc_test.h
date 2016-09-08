@@ -1,5 +1,5 @@
-#ifndef PERSIST_TEST_H
-#define PERSIST_TEST_H
+#ifndef RC_TEST_H
+#define RC_TEST_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,8 +8,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../src/persist.h"
+#include "../src/rc.h"
 
-int run_persist_tests();
+int run_rc_tests();
 
 #endif

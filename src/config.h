@@ -17,7 +17,4 @@ extern int QUIET_FLAG;
 extern int ARGC;
 extern char **ARGV;
 
-char *get_rc_file();
-void set_rc_file(char *file);
-
 #endif

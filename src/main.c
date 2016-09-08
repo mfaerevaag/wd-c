@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "logger.h"
-#include "persist.h"
+#include "engine.h"
 #include "config.h"
 
 int parse_args(int argc, char **argv);
@@ -29,17 +29,7 @@ int main(int argc, char **argv)
         if (ARGC == 1) {
             /* TODO: clean args, buffer overflow */
             char *name = ARGV[0];
-
-            debugf("warping to '%s'\n", name);
-
-            wpoint *point = wp_find(name);
-
-            if (point == NULL) {
-                log_warnf("no warp point named '%s'\n", name);
-                exit(EXIT_ERROR);
-            }
-
-            printf("%s", point->dir);
+            wp_warp(name);
         } else if(ARGC > 1) {
             log_warn("cannot warp to multiple points");
         } else {
@@ -48,7 +38,7 @@ int main(int argc, char **argv)
     }
 
     /* clean */
-    wp_free();
+    rc_free();
     exit(DO_WARP ? EXIT_SUCCESS : EXIT_INFO);
 }
 
@@ -96,7 +86,7 @@ int parse_args(int argc, char **argv)
 
         case 'c':
             debugf("setting rc file to '%s'\n", optarg);
-            set_rc_file(optarg);
+            rc_set_file(optarg);
             break;
 
         case 'a':
@@ -117,14 +107,7 @@ int parse_args(int argc, char **argv)
         case 'p':
             debug("do path");
 
-            wpoint *wp = wp_find(optarg);
-            if (wp == NULL) {
-                log_warnf("no warp point named '%s'\n", optarg);
-                exit(EXIT_ERROR);
-            }
-
-            printf("%s\n", wp->dir);
-
+            wp_path(optarg);
             DO_WARP = 0;
             break;
 
@@ -132,20 +115,14 @@ int parse_args(int argc, char **argv)
             debug("do show");
 
             char *dir = getenv("PWD"); // TODO: env
-            wpoint **wps = wp_all();
-            for (int i = 0; i < wp_count(); i++) {
-                if (strcmp(wps[i]->dir, dir) == 0) {
-                    printf("\t%10s -> %10s\n", wps[i]->name, wps[i]->dir);
-                }
-            }
-
+            wp_show(dir);
             DO_WARP = 0;
             break;
 
         case 'l':
             debug("do list");
 
-            wp_print_all();
+            wp_list();
             DO_WARP = 0;
             break;
 

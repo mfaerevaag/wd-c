@@ -1,8 +1,8 @@
-#include "config_test.h"
-#include "persist_test.h"
+#include "rc_test.h"
+#include "engine_test.h"
 
 int main()
 {
-    return run_config_tests()
-        || run_persist_tests();
+    return run_rc_tests()
+        || run_engine_tests();
 }

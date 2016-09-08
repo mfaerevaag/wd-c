@@ -1,5 +1,5 @@
-#ifndef CONFIG_TEST_H
-#define CONFIG_TEST_H
+#ifndef ENGINE_TEST_H
+#define ENGINE_TEST_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,8 +8,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../src/config.h"
+#include "../src/engine.h"
 
-int run_config_tests();
+int run_engine_tests();
 
 #endif
