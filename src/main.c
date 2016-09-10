@@ -196,7 +196,7 @@ void print_help()
         /* "--clean!\tRemove points warping to nonexistent directories\n" */
         "\n"
         "Other:\n"
-        "-h, --help\t\tShow this extremely helpful text\n"
+        "-h, --help\tShow this extremely helpful text\n"
         "-v, --version\tPrint version\n"
         "-c, --config <file>\tSpecify config file (default ~/.warprc)\n"
         "-q, --quiet\tSuppress all output\n"
