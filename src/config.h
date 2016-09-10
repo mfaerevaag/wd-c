@@ -7,7 +7,7 @@
 #include "logger.h"
 
 #define NAME "wd"
-#define VERSION "0.1.0"
+#define VERSION "0.1.1"
 
 #define EXIT_WARP 0
 #define EXIT_ERROR 1
