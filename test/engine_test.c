@@ -50,6 +50,30 @@ static void test_remove(void **state)
     assert_null(rc_find("bar"));
 }
 
+static void test_show(void **state)
+{
+    (void) state;
+
+    char *pwd = getenv("PWD");
+
+    wd_add("asdfasdf", pwd);
+
+    assert_string_equal("asdfasdf", wd_show(pwd));
+
+    wd_remove("asdfasdf");
+}
+
+static void test_path(void **state)
+{
+    (void) state;
+
+    wd_add("asdfasdf", "/a/s/d/f");
+
+    assert_string_equal("/a/s/d/f", wd_path("asdfasdf"));
+
+    wd_remove("asdfasdf");
+}
+
 /* run */
 
 int run_engine_tests()
@@ -57,6 +81,8 @@ int run_engine_tests()
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_add),
         cmocka_unit_test(test_remove),
+        cmocka_unit_test(test_show),
+        cmocka_unit_test(test_path),
     };
 
     return cmocka_run_group_tests_name(

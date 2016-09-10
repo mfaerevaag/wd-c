@@ -40,29 +40,30 @@ void wd_remove(char* name)
     rc_remove_point(index);
 }
 
-void wd_show(char *dir)
+char *wd_show(char *dir)
 {
     wtab *tab = rc_tab();
     for (size_t i = 0; i < tab->size; i++) {
         if (strcmp(tab->points[i]->dir, dir) == 0) {
-            printf("\t%10s -> %10s\n", tab->points[i]->name, tab->points[i]->dir);
+            return tab->points[i]->name;
         }
     }
+
+    return NULL;
 }
 
-void wd_path(char *dir)
+char *wd_path(char *dir)
 {
     wpoint *wp = rc_find(dir);
 
     if (wp == NULL) {
-        log_warnf("no warp point named '%s'\n", dir);
-        exit(EXIT_ERROR);
+        return NULL;
     }
 
-    printf("%s\n", wp->dir);
+    return wp->dir;
 }
 
-void wd_list()
+void wd_print_all()
 {
     wtab *tab = rc_tab();
 

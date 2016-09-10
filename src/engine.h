@@ -13,8 +13,8 @@
 void wd_warp(char *name);
 void wd_add(char *name, char *dir);
 void wd_remove(char *name);
-void wd_show(char *dir);
-void wd_path(char *dir);
-void wd_list();
+char *wd_show(char *dir);
+char *wd_path(char *dir);
+void wd_print_all();
 
 #endif

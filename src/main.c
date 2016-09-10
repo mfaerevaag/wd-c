@@ -104,25 +104,40 @@ int parse_args(int argc, char **argv)
             DO_WARP = 0;
             break;
 
-        case 'p':
-            debug("do path");
-
-            wd_path(optarg);
-            DO_WARP = 0;
-            break;
-
         case 's':
             debug("do show");
 
-            char *dir = getenv("PWD"); // TODO: env
-            wd_show(dir);
+            char *pwd = getenv("PWD");
+            char *name = wd_show(pwd);
+
+            if (name == NULL) {
+                log_warn("no warp point to current dir");
+            } else {
+                printf("\t%10s -> %10s\n", name, pwd);
+            }
+
+            DO_WARP = 0;
+            break;
+
+        case 'p':
+            debug("do path");
+
+            /* TODO: clean arg */
+            char *path = wd_path(optarg);
+
+            if (path == NULL) {
+                log_warnf("no warp point named '%s'\n", optarg);
+            } else {
+                printf("%s\n", path);
+            }
+
             DO_WARP = 0;
             break;
 
         case 'l':
             debug("do list");
 
-            wd_list();
+            wd_print_all();
             DO_WARP = 0;
             break;
 
