@@ -1,19 +1,5 @@
 #include "engine.h"
 
-void wd_warp(char *name)
-{
-    wpoint *p = rc_find(name);
-
-    if (p == NULL) {
-        log_warnf("no warp point named '%s'\n", name);
-        exit(EXIT_ERROR);
-    }
-
-    debugf("warping to '%s'\n", name);
-
-    printf("%s", p->dir);
-}
-
 void wd_add(char *name, char *dir)
 {
     /* check if exists */

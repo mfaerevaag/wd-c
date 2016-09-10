@@ -10,7 +10,6 @@
 #include "logger.h"
 #include "config.h"
 
-void wd_warp(char *name);
 void wd_add(char *name, char *dir);
 void wd_remove(char *name);
 char *wd_show(char *dir);

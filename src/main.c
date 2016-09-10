@@ -28,8 +28,13 @@ int main(int argc, char **argv)
 
         if (ARGC == 1) {
             /* TODO: clean args, buffer overflow */
-            char *name = ARGV[0];
-            wd_warp(name);
+            char *path = wd_path(ARGV[0]);
+
+            if (path == NULL) {
+                log_warnf("no warp point named '%s'\n", ARGV[0]);
+            } else {
+                printf("%s", path);
+            }
         } else if(ARGC > 1) {
             log_warn("cannot warp to multiple points");
         } else {
