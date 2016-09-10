@@ -1,29 +1,39 @@
 #include "engine.h"
 
-void wd_add(char *name, char *dir)
+int wd_add(char *name, char *dir)
 {
     /* check if exists */
     if (rc_find(name) != NULL) {
         log_warn("point already exists");
-        return;
+        return 1;
     }
 
     debugf("adding '%s' -> '%s'\n", name, dir);
 
-    rc_add_point(name, dir);
+    if (rc_add_point(name, dir)) {
+        log_err("failed adding point");
+        return 1;
+    }
+
+    return 0;
 }
 
-void wd_remove(char* name)
+int wd_remove(char* name)
 {
     int index = rc_find_index(name);
     if (index < 0) {
         log_warnf("no warp point named '%s'\n", name);
-        return;
+        return 1;
     }
 
     debugf("removing '%s'\n", name);
 
-    rc_remove_point(index);
+    if (rc_remove_point(index)) {
+        log_err("failed adding point");
+        return 1;
+    }
+
+    return 0;
 }
 
 char *wd_show(char *dir)

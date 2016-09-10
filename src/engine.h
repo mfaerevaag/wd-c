@@ -10,8 +10,8 @@
 #include "logger.h"
 #include "config.h"
 
-void wd_add(char *name, char *dir);
-void wd_remove(char *name);
+int wd_add(char *name, char *dir);
+int wd_remove(char *name);
 char *wd_show(char *dir);
 char *wd_path(char *dir);
 void wd_print_all();

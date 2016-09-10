@@ -103,6 +103,14 @@ void rc_parse()
         memcpy(p->dir, token, len);
         p->dir[len - 1] = 0; // remove newline char
 
+        /* test corrupt */
+        token = strtok(NULL, DELIM); // should be NULL
+        if (token != NULL) {
+            log_errf("rc file corrupt ('%s')\n", RC_FILE);
+            rc_free();
+            exit(EXIT_ERROR);
+        }
+
         TAB->points[i] = p;
         i++;
     }
@@ -210,10 +218,16 @@ void rc_set_file(char *file)
     RC_FILE = strdup(file);
 }
 
-void rc_add_point(char *name, char *dir)
+int rc_add_point(char *name, char *dir)
 {
     int len;
     wtab *tab = rc_tab();
+
+    /* check for currupt */
+    if (strpbrk(name, ":") != 0 || strpbrk(dir, ":") != 0) {
+        log_err("cannot add point containing colon (':')");
+        return 1;
+    }
 
     tab->size++;
     /* already space for one more point in tab->points, see rc_parse */
@@ -233,9 +247,11 @@ void rc_add_point(char *name, char *dir)
     memcpy(new->dir, dir, len);
 
     RC_CHANGED = 1;
+
+    return 0;
 }
 
-void rc_remove_point(size_t index)
+int rc_remove_point(size_t index)
 {
     wtab *tab = rc_tab();
 
@@ -250,4 +266,6 @@ void rc_remove_point(size_t index)
 
     tab->size--;
     RC_CHANGED = 1;
+
+    return 0;
 }

@@ -19,7 +19,7 @@ void rc_free();
 
 int rc_find_index(char *name);
 wpoint *rc_find(char *name);
-void rc_add_point(char *name, char *dir);
-void rc_remove_point(size_t index);
+int rc_add_point(char *name, char *dir);
+int rc_remove_point(size_t index);
 
 #endif
