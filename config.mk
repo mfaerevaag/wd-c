@@ -18,6 +18,7 @@ OBJ = $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(SRC))
 
 TARGET   ?= $(ODIR)/$(NAME)
 WRAPPERS ?= $(wildcard $(LDIR)/$(NAME).*)
+CONFIG   ?= ~/.warprc
 
 TTARGET ?= $(ODIR)/$(NAME)-test
 TLIBS   ?= -lcmocka

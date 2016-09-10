@@ -38,6 +38,7 @@ test:
 install: $(TARGET)
 	install -Dm755 $(TARGET) $(prefix)/bin/_$(NAME)
 	install -Dm644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
+	touch $(CONFIG)
 
 uninstall: $(TARGET)
 	rm -rf $(prefix)/bin/_$(NAME)
