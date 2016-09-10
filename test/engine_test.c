@@ -31,23 +31,83 @@ static void test_add(void **state)
 
     assert_null(rc_find("asdf"));
 
-    wd_add("asdf", "/a/s/d/f");
+    int rc = wd_add("asdf", "/a/s/d/f");
+    assert_int_equal(0, rc);
 
     wpoint *wp = rc_find("asdf");
     assert_non_null(wp);
     assert_string_equal("asdf", wp->name);
     assert_string_equal("/a/s/d/f", wp->dir);
+
+    wd_remove("asdf");
+}
+
+static void test_add_space_name(void **state)
+{
+    (void) state;
+
+    assert_null(rc_find("a s d f"));
+
+    int rc = wd_add("a s d f", "/a/s/d/f");
+    assert_int_equal(0, rc);
+
+    wpoint *wp = rc_find("a s d f");
+    assert_non_null(wp);
+    assert_string_equal("a s d f", wp->name);
+    assert_string_equal("/a/s/d/f", wp->dir);
+
+    wd_remove("a s d f");
+}
+
+static void test_add_space_dir(void **state)
+{
+    (void) state;
+
+    assert_null(rc_find("a s d f"));
+
+    int rc = wd_add("a s d f", "/a s d f/s/d/f U");
+    assert_int_equal(0, rc);
+
+    wpoint *wp = rc_find("a s d f");
+    assert_non_null(wp);
+    assert_string_equal("a s d f", wp->name);
+    assert_string_equal("/a s d f/s/d/f U", wp->dir);
+
+    wd_remove("a s d f");
+}
+
+static void test_add_colon_name(void **state)
+{
+    (void) state;
+
+    int rc = wd_add("as:df", "/a/s/d/f");
+
+    assert_int_equal(1, rc);
+}
+
+static void test_add_colon_dir(void **state)
+{
+    (void) state;
+
+    int rc = wd_add("asdf", "/a/s:/d/f");
+
+    assert_int_equal(1, rc);
 }
 
 static void test_remove(void **state)
 {
     (void) state;
 
-    assert_non_null(rc_find("bar"));
+    assert_null(rc_find("asdf"));
 
-    wd_remove("bar");
+    wd_add("asdf", "/a/s/d/f");
 
-    assert_null(rc_find("bar"));
+    assert_non_null(rc_find("asdf"));
+
+    int rc = wd_remove("asdf");
+    assert_int_equal(0, rc);
+
+    assert_null(rc_find("asdf"));
 }
 
 static void test_show(void **state)
@@ -80,6 +140,9 @@ int run_engine_tests()
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_add),
+        cmocka_unit_test(test_add_space_name),
+        cmocka_unit_test(test_add_space_dir),
+        cmocka_unit_test(test_add_colon_name),
         cmocka_unit_test(test_remove),
         cmocka_unit_test(test_show),
         cmocka_unit_test(test_path),
