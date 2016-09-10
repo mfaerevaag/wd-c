@@ -31,7 +31,7 @@ static void test_add(void **state)
 
     assert_null(rc_find("asdf"));
 
-    wp_add("asdf", "/a/s/d/f");
+    wd_add("asdf", "/a/s/d/f");
 
     wpoint *wp = rc_find("asdf");
     assert_non_null(wp);
@@ -45,7 +45,7 @@ static void test_remove(void **state)
 
     assert_non_null(rc_find("bar"));
 
-    wp_remove("bar");
+    wd_remove("bar");
 
     assert_null(rc_find("bar"));
 }

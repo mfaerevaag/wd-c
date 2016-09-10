@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         if (ARGC == 1) {
             /* TODO: clean args, buffer overflow */
             char *name = ARGV[0];
-            wp_warp(name);
+            wd_warp(name);
         } else if(ARGC > 1) {
             log_warn("cannot warp to multiple points");
         } else {
@@ -93,21 +93,21 @@ int parse_args(int argc, char **argv)
             debug("do add");
 
             /* TODO: clean args, env */
-            wp_add(optarg, getenv("PWD"));
+            wd_add(optarg, getenv("PWD"));
             DO_WARP = 0;
             break;
 
         case 'r':
             debug("do remove");
 
-            wp_remove(optarg);
+            wd_remove(optarg);
             DO_WARP = 0;
             break;
 
         case 'p':
             debug("do path");
 
-            wp_path(optarg);
+            wd_path(optarg);
             DO_WARP = 0;
             break;
 
@@ -115,14 +115,14 @@ int parse_args(int argc, char **argv)
             debug("do show");
 
             char *dir = getenv("PWD"); // TODO: env
-            wp_show(dir);
+            wd_show(dir);
             DO_WARP = 0;
             break;
 
         case 'l':
             debug("do list");
 
-            wp_list();
+            wd_list();
             DO_WARP = 0;
             break;
 

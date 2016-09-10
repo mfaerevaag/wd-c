@@ -1,6 +1,6 @@
 #include "engine.h"
 
-void wp_warp(char *name)
+void wd_warp(char *name)
 {
     wpoint *p = rc_find(name);
 
@@ -14,7 +14,7 @@ void wp_warp(char *name)
     printf("%s", p->dir);
 }
 
-void wp_add(char *name, char *dir)
+void wd_add(char *name, char *dir)
 {
     /* check if exists */
     if (rc_find(name) != NULL) {
@@ -27,7 +27,7 @@ void wp_add(char *name, char *dir)
     rc_add_point(name, dir);
 }
 
-void wp_remove(char* name)
+void wd_remove(char* name)
 {
     int index = rc_find_index(name);
     if (index < 0) {
@@ -40,7 +40,7 @@ void wp_remove(char* name)
     rc_remove_point(index);
 }
 
-void wp_show(char *dir)
+void wd_show(char *dir)
 {
     wtab *tab = rc_tab();
     for (size_t i = 0; i < tab->size; i++) {
@@ -50,7 +50,7 @@ void wp_show(char *dir)
     }
 }
 
-void wp_path(char *dir)
+void wd_path(char *dir)
 {
     wpoint *wp = rc_find(dir);
 
@@ -62,7 +62,7 @@ void wp_path(char *dir)
     printf("%s\n", wp->dir);
 }
 
-void wp_list()
+void wd_list()
 {
     wtab *tab = rc_tab();
 

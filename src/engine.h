@@ -10,11 +10,11 @@
 #include "logger.h"
 #include "config.h"
 
-void wp_warp(char *name);
-void wp_add(char *name, char *dir);
-void wp_remove(char *name);
-void wp_show(char *dir);
-void wp_path(char *dir);
-void wp_list();
+void wd_warp(char *name);
+void wd_add(char *name, char *dir);
+void wd_remove(char *name);
+void wd_show(char *dir);
+void wd_path(char *dir);
+void wd_list();
 
 #endif
