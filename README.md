@@ -37,6 +37,14 @@ Example for `bash` using the `.sh` wrapper:
     # echo "source ~/bin/wd.sh" >> ~/.bashrc
 
 
+# Contribution
+
+Use the test suite with
+
+    # make debug
+    # make test
+
+
 # Usage
 
 See original [README](https://github.com/mfaerevaag/wd).
