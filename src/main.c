@@ -37,8 +37,10 @@ int main(int argc, char **argv)
             }
         } else if(ARGC > 1) {
             log_warn("cannot warp to multiple points");
+            exit(EXIT_ERROR);
         } else {
             log_warn("no warp point given");
+            exit(EXIT_ERROR);
         }
     }
 
