@@ -190,7 +190,7 @@ void print_help()
         "Commands:\n"
         "--add <point>\tAdds the current working directory to your warp points\n"
         /* "--add! <point>\tOverwrites existing warp point\n" */
-        "--rm <point>\tRemoves the given warp point\n"
+        "--remove <point>\tRemoves the given warp point\n"
         "--list\t\tPrint all stored warp points\n"
         "--show\t\tPrint warp points to current directory\n"
         "--path <point>\tShow the path to given warp point\n"
