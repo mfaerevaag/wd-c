@@ -2,7 +2,7 @@ include config.mk
 export
 
 .PHONY: all build run clean debug install uninstall \
-    build-test test test-config
+	build-test test test-config
 
 all: clean build
 
@@ -10,11 +10,11 @@ all: clean build
 # src
 
 $(ODIR):
-    mkdir -p $(ODIR)
+	mkdir -p $(ODIR)
 
 build: $(ODIR)
 build:
-    cd $(SDIR) && $(MAKE) -f Makefile.src
+	cd $(SDIR) && $(MAKE) -f Makefile.src
 
 debug: DEBUG = 1
 debug: build
@@ -23,33 +23,33 @@ debug: build
 # test
 
 build-test: build
-    cd $(TDIR) && $(MAKE) -f Makefile.test
+	cd $(TDIR) && $(MAKE) -f Makefile.test
 
 test-config:
-    cp $(TCONFIG) $(ODIR)/
+	cp $(TCONFIG) $(ODIR)/
 
 test: build-test test-config
 test:
-    ./$(TTARGET)
+	./$(TTARGET)
 
 
 # install
 
 install: $(TARGET)
-    install -Dm755 $(TARGET) $(prefix)/bin/_$(NAME)
-    mkdir $(prefix)/share/$(NAME)
-    install -Dm644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
-    touch $(CONFIG)
+	install -Dm755 $(TARGET) $(prefix)/bin/_$(NAME)
+	mkdir $(prefix)/share/$(NAME)
+	install -Dm644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
+	touch $(CONFIG)
 
 uninstall: $(TARGET)
-    rm -rf $(prefix)/bin/_$(NAME)
-    rm -rf $(prefix)/share/$(NAME)
+	rm -rf $(prefix)/bin/_$(NAME)
+	rm -rf $(prefix)/share/$(NAME)
 
 
 # misc
 
 run:
-    $(TARGET)
+	$(TARGET)
 
 clean:
-    rm -rf $(ODIR)/*
+	rm -rf $(ODIR)/*
