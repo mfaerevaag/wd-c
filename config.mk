@@ -1,8 +1,6 @@
 CC ?= gcc
 
-CFLAGS ?= -W -pedantic -Werror -Wall -std=gnu99 \
--fno-strict-aliasing -fno-common -Wno-unused-parameter \
--fstrict-aliasing -fstrict-overflow -Wno-return-local-addr
+CFLAGS ?= -Wall -std=gnu99
 
 prefix ?= /usr
 
