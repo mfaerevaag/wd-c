@@ -36,9 +36,9 @@ test:
 # install
 
 install: $(TARGET)
-	install -Dm755 $(TARGET) $(prefix)/bin/_$(NAME)
-	mkdir $(prefix)/share/$(NAME)
-	install -Dm644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
+	install -m755 $(TARGET) $(prefix)/bin/_$(NAME)
+	mkdir -p $(prefix)/share/$(NAME)
+	install -m644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
 	touch $(CONFIG)
 
 uninstall: $(TARGET)
