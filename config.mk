@@ -1,8 +1,14 @@
 CC ?= gcc
-
 CFLAGS ?= -Wall -std=gnu99
 
-prefix ?= /usr
+# set prefix according to OS
+ifeq ($(UNAME),Darwin) # Mac OS X
+PREFIX ?= /usr/local
+PREFIX_SHARE ?= /usr/share
+else # Linux
+PREFIX ?= /usr/bin
+PREFIX_SHARE ?= /usr/share
+endif
 
 NAME = wd
 

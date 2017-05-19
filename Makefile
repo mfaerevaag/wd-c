@@ -36,14 +36,14 @@ test:
 # install
 
 install: $(TARGET)
-	install -m755 $(TARGET) $(prefix)/bin/_$(NAME)
-	mkdir -p $(prefix)/share/$(NAME)
-	install -m644 -t $(prefix)/share/$(NAME)/ $(WRAPPERS)
+	install -m755 $(TARGET) $(PREFIX)/_$(NAME)
+	mkdir -p $(PREFIX_SHARE)/$(NAME)
+	install -m644 -t $(PREFIX_SHARE)/$(NAME)/ $(WRAPPERS)
 	touch $(CONFIG)
 
 uninstall: $(TARGET)
-	rm -rf $(prefix)/bin/_$(NAME)
-	rm -rf $(prefix)/share/$(NAME)
+	rm -rf $(PREFIX)/_$(NAME)
+	rm -rf $(PREFIX_SHARE)/$(NAME)
 
 
 # misc
