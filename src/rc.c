@@ -14,46 +14,49 @@ char *RC_FILE = NULL;
 
 wtab *rc_tab()
 {
+    /* lazy init tab */
     if (RC_PARSED == 0) {
         debug("init points");
         rc_parse();
     }
 
-    return TAB;;
+    return TAB;
 }
 
 int rc_find_index(char *name)
 {
-    int index = -1;
+    int i;
     wtab *tab = rc_tab();
 
-    for (size_t i = 0; i < tab->size; i++)
-    {
+    /* find point */
+    for (i = 0; i < tab->size; i++) {
         if (strcmp(name, tab->points[i]->name) == 0) {
-            /* debugf("match at index %i\n", i); */
-            index = i;
-            break;
+            return i;
         }
     }
 
-    return index;
+    return -1;
 }
 
 wpoint *rc_find(char *name)
 {
     int index = rc_find_index(name);
 
-    if (index < 0) return NULL;
+    /* check not found */
+    if (index < 0) {
+        return NULL;
+    }
 
     return rc_tab()->points[index];
 }
 
 void rc_parse()
 {
-    char *line = NULL;
+    char *line = NULL, *tok;
     size_t len = 0;
     ssize_t read;
-    int count = 0;
+    int count, tok_len;
+    wpoint *p;
 
     debug("parsing points...");
 
@@ -68,6 +71,7 @@ void rc_parse()
     }
 
     /* count lines */
+    count = 0;
     while ((read = getline(&line, &len, RC_FP)) != -1) {
         count++;
     }
@@ -81,31 +85,29 @@ void rc_parse()
     rewind(RC_FP);
     int i = 0;
     while ((read = getline(&line, &len, RC_FP)) != -1) {
-        char *token;
-        int len;
-        wpoint *p = malloc(sizeof(wpoint));
+        p = malloc(sizeof(wpoint));
 
         /* debugf("found [%zu] %s", read, line); */
 
         /* name token */
-        token = strtok(line, DELIM); // token will point to name
-        len = strlen(token);
+        tok = strtok(line, DELIM); // token will point to name
+        tok_len = strlen(tok);
 
-        /* debugf("name token: [%i] %s\n", len, token); */
-        p->name = (char *) calloc(sizeof(char), len);
-        memcpy(p->name, token, len);
+        /* debugf("name tok: [%i] %s\n", len, tok); */
+        p->name = (char *) calloc(sizeof(char), tok_len);
+        memcpy(p->name, tok, tok_len);
 
         /* dir token */
-        token = strtok(NULL, DELIM); // token will point to dir
-        len = strlen(token);
+        tok = strtok(NULL, DELIM); // token will point to dir
+        tok_len = strlen(tok);
 
-        p->dir = (char *) calloc(sizeof(char), len);
-        memcpy(p->dir, token, len);
-        p->dir[len - 1] = 0; // remove newline char
+        p->dir = (char *) calloc(sizeof(char), tok_len);
+        memcpy(p->dir, tok, tok_len);
+        p->dir[tok_len - 1] = 0; // remove newline char
 
         /* test corrupt */
-        token = strtok(NULL, DELIM); // should be NULL
-        if (token != NULL) {
+        tok = strtok(NULL, DELIM); // should be NULL
+        if (tok != NULL) {
             log_errf("rc file corrupt ('%s')\n", RC_FILE);
             rc_free();
             exit(EXIT_ERROR);
@@ -127,41 +129,48 @@ void rc_parse()
 
 void rc_free()
 {
-    if (RC_PARSED == 1) {
-        debug("freeing");
+    int i;
+    wpoint *wp;
 
-        if (RC_CHANGED == 1) {
-            rc_store();
-        }
-
-        /* free pointers */
-        wpoint *wp;
-        for (int i = 0; i < (int) TAB->size; i++) {
-            wp = TAB->points[i];
-
-            free(wp->name);
-            free(wp->dir);
-            free(wp);
-        }
-        free(TAB->points);
-        free(TAB);
-
-        /* close file handle */
-        if (fclose(RC_FP)) {
-            log_err("error closing config file");
-            exit(EXIT_ERROR);
-        }
-        RC_FP = NULL;
-
-        RC_CHANGED = 0;
-        RC_PARSED = 0;
+    /* dont free if not alloced */
+    if (RC_PARSED != 1) {
+        return;
     }
+
+    debug("freeing");
+
+    /* store unsaved changes */
+    if (RC_CHANGED == 1) {
+        rc_store();
+    }
+
+    /* free pointers */
+    for (i = 0; i < TAB->size; i++) {
+        wp = TAB->points[i];
+
+        free(wp->name);
+        free(wp->dir);
+        free(wp);
+    }
+    free(TAB->points);
+    free(TAB);
+
+    /* close file handle */
+    if (fclose(RC_FP)) {
+        log_err("error closing config file");
+        exit(EXIT_ERROR);
+    }
+
+    /* reset state */
+    RC_FP = NULL;
+    RC_CHANGED = 0;
+    RC_PARSED = 0;
 }
 
 void rc_store()
 {
+    int i, rc;
     wpoint *wp;
-    int rc;
 
     debug("storing points...");
 
@@ -175,7 +184,7 @@ void rc_store()
     }
 
     /* write to file */
-    for (int i = 0; i < (int) TAB->size; i++)
+    for (i = 0; i < TAB->size; i++)
     {
         wp = TAB->points[i];
         /* debugf("writing %s:%s\n", wp->name, wp->dir); */
@@ -191,12 +200,14 @@ void rc_store()
 
 char *rc_get_file()
 {
+    char *home;
+
     /* already there */
     if (RC_FILE != NULL) {
         return RC_FILE;
     }
 
-    char *home = getenv("HOME");
+    home = getenv("HOME");
 
     RC_FILE = malloc(strlen(home) + strlen(RC_FILE_NAME) + 1);
     sprintf(RC_FILE, "%s/%s", home, RC_FILE_NAME);
@@ -206,7 +217,10 @@ char *rc_get_file()
 
 void rc_set_file(char *file)
 {
-    int len = strlen(file);
+    int len;
+
+    len = strlen(file);
+
     if (len > 248) {
         log_err("config file path too long");
         exit(EXIT_ERROR);
@@ -221,6 +235,7 @@ void rc_set_file(char *file)
 int rc_add_point(char *name, char *dir)
 {
     int len;
+    wpoint *new;
     wtab *tab = rc_tab();
 
     /* check for currupt */
@@ -234,7 +249,7 @@ int rc_add_point(char *name, char *dir)
 
     /* new point */
     tab->points[tab->size - 1] = malloc(sizeof(wpoint));
-    wpoint *new = tab->points[tab->size - 1];
+    new = tab->points[tab->size - 1];
 
     /* set name */
     len = strlen(name);
@@ -253,13 +268,14 @@ int rc_add_point(char *name, char *dir)
 
 int rc_remove_point(size_t index)
 {
+    int i;
     wtab *tab = rc_tab();
 
     /* check if last */
     if (index == tab->size - 1) {
         tab->points[index] = NULL;
     } else {
-        for (size_t i = index; i < tab->size - 1; i++) {
+        for (i = index; i < tab->size - 1; i++) {
             tab->points[i] = tab->points[i + 1];
         }
     }

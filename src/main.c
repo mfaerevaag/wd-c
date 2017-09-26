@@ -210,5 +210,5 @@ void print_help()
 
 void print_version()
 {
-    printf("wd (in c) version 0.1\n");
+    printf("wd (in c) version 0.1.2\n");
 }
