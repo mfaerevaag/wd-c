@@ -212,23 +212,23 @@ void print_help()
            "\t$ wd foo \t\t# and you're back!\n"
            "\n"
            "Commands:\n"
-           "--add <point>\tAdds the current working directory to your warp points\n"
+           "-a | --add <point>\tAdds the current working directory to your warp points\n"
            /* "--add! <point>\tOverwrites existing warp point\n" */
-           "--remove <point>\tRemoves the given warp point\n"
-           "--list\t\tPrint all stored warp points\n"
-           "--show\t\tPrint warp points to current directory\n"
-           "--path <point>\tShow the path to given warp point\n"
+           "-r | --remove <point>\tRemoves the given warp point\n"
+           "-l | --list\t\tPrint all stored warp points\n"
+           "-s | --show\t\tPrint warp points to current directory\n"
+           "-p | --path <point>\tShow the path to given warp point\n"
            /* "--ls  <point>\tShow files from given warp point\n" */
            /* "--clean!\tRemove points warping to nonexistent directories\n" */
            "\n"
            "Other:\n"
-           "-h, --help\tShow this extremely helpful text\n"
-           "-v, --version\tPrint version\n"
+           "-h, --help\t\tShow this extremely helpful text\n"
+           "-v, --version\t\tPrint version\n"
            "-c, --config <file>\tSpecify config file (default ~/.warprc)\n"
-           "-q, --quiet\tSuppress all output\n"
+           "-q, --quiet\t\tSuppress all output\n"
            "\n"
-           "Licenced under MIT\n" // TODO
-           "Report bugs to github.com/mfaerevaag/wdc\n" // TODO
+           "Licenced under MIT\n"
+           "Report bugs to github.com/mfaerevaag/wd-c\n"
            );
 }
 
