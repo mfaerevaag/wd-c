@@ -166,7 +166,7 @@ void rc_store()
     debug("storing points...");
 
     /* truncate and get write permission */
-    RC_FP = freopen(NULL, "w+", RC_FP);
+    RC_FP = freopen(rc_get_file(), "w+", RC_FP);
 
     /* check */
     if (RC_FP == NULL) {

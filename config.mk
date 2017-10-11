@@ -1,10 +1,11 @@
 CC ?= gcc
 CFLAGS ?= -Wall -std=gnu99
+UNAME := $(shell uname)
 
 # set prefix according to OS
 ifeq ($(UNAME),Darwin) # Mac OS X
-PREFIX ?= /usr/local
-PREFIX_SHARE ?= /usr/share
+PREFIX ?= /usr/local/bin
+PREFIX_SHARE ?= /usr/local/share
 else # Linux
 PREFIX ?= /usr/bin
 PREFIX_SHARE ?= /usr/share

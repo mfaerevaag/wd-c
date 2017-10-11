@@ -38,7 +38,7 @@ test:
 install: $(TARGET)
 	install -m755 $(TARGET) $(PREFIX)/_$(NAME)
 	mkdir -p $(PREFIX_SHARE)/$(NAME)
-	install -m644 -t $(PREFIX_SHARE)/$(NAME)/ $(WRAPPERS)
+	install -m644 $(WRAPPERS) $(PREFIX_SHARE)/$(NAME)/
 	touch $(CONFIG)
 
 uninstall: $(TARGET)
@@ -53,3 +53,4 @@ run:
 
 clean:
 	rm -rf $(ODIR)/*
+	rm *.o
