@@ -37,6 +37,13 @@ Example for `bash` using the `.sh` wrapper:
     # echo "source ~/bin/wd.sh" >> ~/.bashrc
 
 
+# Usage
+
+See original [README](https://github.com/mfaerevaag/wd).
+
+Note that argument syntax has changed to standard `getopt_long` (prefixed with single og double dash, e.g. `-a` / `--add`), and that some functions are _not yet implemented_ (see list below).
+
+
 # Contribution
 
 Use the test suite with
@@ -44,9 +51,9 @@ Use the test suite with
     # make debug
     # make test
 
+Not yet implemented:
 
-# Usage
-
-See original [README](https://github.com/mfaerevaag/wd).
-
-Note that argument syntax has changed to standard `getopt_long` (prefixed with single og double dash, e.g. `-a` / `--add`), and that some functions are _not yet implemented_.
+ - [X] Warp directly to subdirectory of point
+ - [ ] Overwriting (force flag)
+ - [ ] Clean rc-file
+ - [ ] Tab completion
