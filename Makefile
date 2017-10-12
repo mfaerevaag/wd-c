@@ -53,4 +53,3 @@ run:
 
 clean:
 	rm -rf $(ODIR)/*
-	rm *.o
