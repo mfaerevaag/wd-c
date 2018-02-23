@@ -1,0 +1,76 @@
+___wd() 
+{
+
+    local cur prev words cword split
+    local command_given command_regex config_path config_opt_regex
+    _init_completion -s || return
+    command_given=false
+
+    config_path=${WD_CONFIG:=~/.warprc}
+
+    #default list of options to complete
+    opts="-a --add -r --remove -l --list -s --show -p --path -h --help -v --version -c --config -q --quiet"
+
+    command_regex='([[:blank:]](-a|--add|-r|--remove|-l|--list|-s|--show|-p|--path|-h|--help|-v|--version))|((-c|--config)[[:blank:]]+(\w|\.)+[[:blank:]]+\w+|(wd|-q|--quiet)[[:blank:]]+\w+)'
+    config_opt_regex='(--config|-c)[[:blank:]]+\w+'
+
+    # if a command is already specified, only allow optional parameters
+    if egrep --quiet "$command_regex" <<< "${words[@]}"; then    # if [[ "${words[@]}" =~ $command_regex[[:blank:]] ]]; then
+        command_given=true
+        opts="-c --config -q --quiet"
+    fi
+
+    # don't complete optional parameters if already specified
+    if [[ "${words[@]}" =~ [[:blank:]](-c|--config)[[:blank:]] ]]; then
+        opts="${opts/-c --config /}"
+    fi
+    if [[ "${words[@]}" =~ [[:blank:]](-q|--quiet)[[:blank:]] ]]; then
+        opts="${opts/-q --quiet/}"
+    fi
+
+    if [[ "${words[@]}" =~ [[:blank:]](-h|--help|-v|--version)[[:blank:]] ]]; then
+        opts=""
+    fi
+
+    # uncomment for debugging
+
+    warpPoints(){
+        local points=$(awk -F ":" '{print $1}' "${config_path}")
+        opts="${opts} ${points}"
+        # COMPREPLY=( $(compgen -W "${points}" -- ${cur}) )
+    }
+
+    # for parameters after commands
+    case "${prev}" in
+        -c|--config)
+            # complete files
+            _filedir
+            return 0
+            ;;
+        wd|-r|--remove|-p|--path)
+            if [[ -z $cur ]]; then
+                opts=""
+            fi
+            ;&
+        -q|--quiet)
+            # complete warp points
+            if [[ command_given = false ]] && [[ -z $cur ]] || [[ $cur != "-"* ]]; then
+                warpPoints
+            fi
+            ;;
+        -a|--add)
+            return 0
+            ;;
+    esac
+
+    if [[ $cword -gt 1 ]] && [[ "${words[cword-2]}" =~ -c|--config ]] && [[ command_given = false ]]; then
+        warpPoints
+    fi
+    # ( set -o posix ; set ) | grep -E "cur|prev|words|cword|command_given|opts|my_test" | less
+
+    # generate the actual suggestion
+    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
+    return 0
+}
+
+complete -F ___wd wd
