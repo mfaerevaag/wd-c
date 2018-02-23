@@ -1,6 +1,5 @@
 ___wd() 
 {
-
     local cur prev words cword split
     local command_given command_regex config_path config_opt_regex
     _init_completion -s || return
@@ -11,7 +10,7 @@ ___wd()
     #default list of options to complete
     opts="-a --add -r --remove -l --list -s --show -p --path -h --help -v --version -c --config -q --quiet"
 
-    command_regex='([[:blank:]](-a|--add|-r|--remove|-l|--list|-s|--show|-p|--path|-h|--help|-v|--version))|((-c|--config)[[:blank:]]+(\w|\.)+[[:blank:]]+\w+|(wd|-q|--quiet)[[:blank:]]+\w+)'
+    command_regex='(([[:blank:]](-a|--add|-r|--remove|-l|--list|-s|--show|-p|--path|-h|--help|-v|--version))|((-c|--config)[[:blank:]]+(\w|\.)+[[:blank:]]+\w+|(wd|-q|--quiet)[[:blank:]]+\w+))[[:blank:]]'
     config_opt_regex='(--config|-c)[[:blank:]]+\w+'
 
     # if a command is already specified, only allow optional parameters
@@ -31,6 +30,8 @@ ___wd()
     if [[ "${words[@]}" =~ [[:blank:]](-h|--help|-v|--version)[[:blank:]] ]]; then
         opts=""
     fi
+
+
 
     # uncomment for debugging
 
@@ -54,7 +55,7 @@ ___wd()
             ;&
         -q|--quiet)
             # complete warp points
-            if [[ command_given = false ]] && [[ -z $cur ]] || [[ $cur != "-"* ]]; then
+            if [[ $command_given = false && ( -z $cur || $cur != "-"* ) ]]; then
                 warpPoints
             fi
             ;;
@@ -63,7 +64,7 @@ ___wd()
             ;;
     esac
 
-    if [[ $cword -gt 1 ]] && [[ "${words[cword-2]}" =~ -c|--config ]] && [[ command_given = false ]]; then
+    if [[ $cword -gt 1 ]] && [[ "${words[cword-2]}" =~ -c|--config ]] && [[ $command_given = false ]]; then
         warpPoints
     fi
     # ( set -o posix ; set ) | grep -E "cur|prev|words|cword|command_given|opts|my_test" | less
