@@ -6,7 +6,7 @@ UNAME := $(shell uname)
 ifeq ($(UNAME),Darwin) # Mac OS X
 PREFIX ?= /usr/local/bin
 PREFIX_SHARE ?= /usr/local/share
-PREFIX_BASH_COMP ?= /usr/local/etc/bash_completion.d/
+PREFIX_BASH_COMP ?= /usr/local/etc/bash_completion.d
 else # Linux
 PREFIX ?= /usr/bin
 PREFIX_SHARE ?= /usr/share

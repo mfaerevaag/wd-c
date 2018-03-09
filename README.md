@@ -56,4 +56,4 @@ Not yet implemented:
  - [X] Warp directly to subdirectory of point
  - [ ] Overwriting (force flag)
  - [ ] Clean rc-file
- - [ ] Tab completion
+ - [ ] Tab completion (bash is implemented)

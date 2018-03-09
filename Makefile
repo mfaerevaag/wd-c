@@ -39,12 +39,13 @@ install: $(TARGET)
 	install -m755 $(TARGET) $(PREFIX)/_$(NAME)
 	mkdir -p $(PREFIX_SHARE)/$(NAME)
 	install -m644 $(WRAPPERS) $(PREFIX_SHARE)/$(NAME)/
-	install -m664 lib/completions/wd.bash_completion $(PREFIX_BASH_COMP)
+	install -m664 lib/completions/wd.bash_completion $(PREFIX_BASH_COMP)/wd.bash_completion
 	touch $(CONFIG)
 
 uninstall: $(TARGET)
 	rm -rf $(PREFIX)/_$(NAME)
 	rm -rf $(PREFIX_SHARE)/$(NAME)
+	rm -f $(PREFIX_BASH_COMP)/wd.bash_completion
 
 
 # misc
