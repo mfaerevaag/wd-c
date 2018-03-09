@@ -10,7 +10,7 @@ ___wd()
     #default list of options to complete
     opts="-a --add -r --remove -l --list -s --show -p --path -h --help -v --version -c --config -q --quiet"
 
-    command_regex='(([[:blank:]](-a|--add|-r|--remove|-l|--list|-s|--show|-p|--path|-h|--help|-v|--version))|((-c|--config)[[:blank:]]+(\w|\.)+[[:blank:]]+\w+|(wd|-q|--quiet)[[:blank:]]+\w+))[[:blank:]]'
+    command_regex='(([[:blank:]](-a|--add|-r|--remove|-l|--list|-s|--show|-h|--help|-v|--version))|((-c|--config)[[:blank:]]+(\w|\.)+[[:blank:]]+\w+|(wd|-q|--quiet|-p|--path)[[:blank:]]+\w+))[[:blank:]]'
     config_opt_regex='(--config|-c)[[:blank:]]+\w+'
 
     # if a command is already specified, only allow optional parameters
@@ -32,9 +32,6 @@ ___wd()
     fi
 
 
-
-    # uncomment for debugging
-
     warpPoints(){
         local points=$(awk -F ":" '{print $1}' "${config_path}")
         opts="${opts} ${points}"
@@ -48,7 +45,7 @@ ___wd()
             _filedir
             return 0
             ;;
-        wd|-r|--remove|-p|--path)
+        wd|-r|--remove)
             if [[ -z $cur ]]; then
                 opts=""
             fi
@@ -59,6 +56,10 @@ ___wd()
                 warpPoints
             fi
             ;;
+        -p|--path)
+            opts=""
+            warpPoints
+            ;;
         -a|--add)
             return 0
             ;;
@@ -67,6 +68,8 @@ ___wd()
     if [[ $cword -gt 1 ]] && [[ "${words[cword-2]}" =~ -c|--config ]] && [[ $command_given = false ]]; then
         warpPoints
     fi
+
+    # uncomment for debug output:
     # ( set -o posix ; set ) | grep -E "cur|prev|words|cword|command_given|opts|my_test" | less
 
     # generate the actual suggestion
