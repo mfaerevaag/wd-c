@@ -85,8 +85,8 @@ int parse_args(int argc, char **argv)
 
             static struct option long_options[] =
                 {
-                    {"quiet",   no_argument,       &QUIET_FLAG, 1},
-                    {"version", no_argument,       0,  0 },
+                    {"quiet",   no_argument,       0, 'q'},
+                    {"version", no_argument,       0, 'v'},
                     {"help",    no_argument,       0, 'h'},
                     {"list",    no_argument,       0, 'l'},
                     {"show",    no_argument,       0, 's'},
@@ -97,7 +97,7 @@ int parse_args(int argc, char **argv)
                     {0, 0, 0, 0}
                 };
 
-            c = getopt_long(argc, argv, "hlsc:r:a:p:",
+            c = getopt_long(argc, argv, "hlsqvc:r:a:p:",
                             long_options, &option_index);
 
             if (c == -1)
@@ -105,7 +105,7 @@ int parse_args(int argc, char **argv)
 
             switch (c)
                 {
-                case 0:
+                case 'v':
                     print_version();
                     exit(EXIT_INFO);
                     break;
@@ -174,6 +174,11 @@ int parse_args(int argc, char **argv)
 
                 case '?':
                     // TODO: logging
+                    break;
+
+                case 'q':
+                    QUIET_FLAG = 1;
+                    // TODO: quiet
                     break;
 
                 default:
